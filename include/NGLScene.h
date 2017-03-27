@@ -82,6 +82,7 @@ private:
     ngl::Camera m_cam;
     std::unique_ptr<Map> m_map;
     ngl::Mat4 m_mouseGlobalTX;
+    bool m_wireframe=false;
 
 };
 

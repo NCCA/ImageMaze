@@ -27,7 +27,7 @@ void NGLScene::resizeGL(int _w , int _h)
 {
   m_win.width  = static_cast<int>( _w * devicePixelRatio() );
   m_win.height = static_cast<int>( _h * devicePixelRatio() );
-  m_cam.setShape(45.0f,static_cast<float>(m_win.width)/m_win.height,0.5f,100.0f);
+  m_cam.setShape(45.0f,static_cast<float>(m_win.width)/m_win.height,0.5f,50.0f);
 }
 
 
@@ -65,11 +65,14 @@ void NGLScene::paintGL()
   m_mouseGlobalTX.m_m[ 3 ][ 0 ] = m_modelPos.m_x;
   m_mouseGlobalTX.m_m[ 3 ][ 1 ] = m_modelPos.m_y;
   m_mouseGlobalTX.m_m[ 3 ][ 2 ] = m_modelPos.m_z;
+  if(m_wireframe)
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
   m_map->draw(m_mouseGlobalTX);
+  glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
   shader->setUniform("Colour",0.3f,0.3f,0.3f,1.0f);
   ngl::Mat4 pos;
-  pos.translate(0,-0.5f,0);
+  pos.translate(0,-0.55f,0);
   shader->setUniform("MVP", m_mouseGlobalTX * pos* m_cam.getVPMatrix() );
   ngl::VAOPrimitives::instance()->draw("ground");
 }
@@ -90,6 +93,7 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
       m_modelPos.set(ngl::Vec3::zero());
 
   break;
+  case Qt::Key_W : m_wireframe^=true; break;
   default : break;
   }
   // finally update the GLWindow and re-draw
