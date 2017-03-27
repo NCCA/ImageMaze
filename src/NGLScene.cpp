@@ -3,6 +3,9 @@
 
 #include "NGLScene.h"
 #include <ngl/NGLInit.h>
+#include <ngl/ShaderLib.h>
+#include <ngl/VAOPrimitives.h>
+#include <ngl/Transformation.h>
 #include <iostream>
 
 NGLScene::NGLScene(const std::string &_fname)
@@ -40,7 +43,7 @@ void NGLScene::initializeGL()
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
   m_cam.set(ngl::Vec3(2,2,-10),ngl::Vec3::zero(),ngl::Vec3::up());
-
+  ngl::VAOPrimitives::instance()->createTrianglePlane("ground",40,40,10,10,ngl::Vec3::up());
 }
 
 
@@ -63,6 +66,12 @@ void NGLScene::paintGL()
   m_mouseGlobalTX.m_m[ 3 ][ 1 ] = m_modelPos.m_y;
   m_mouseGlobalTX.m_m[ 3 ][ 2 ] = m_modelPos.m_z;
   m_map->draw(m_mouseGlobalTX);
+  ngl::ShaderLib *shader=ngl::ShaderLib::instance();
+  shader->setUniform("Colour",0.3f,0.3f,0.3f,1.0f);
+  ngl::Mat4 pos;
+  pos.translate(0,-0.5f,0);
+  shader->setUniform("MVP", m_mouseGlobalTX * pos* m_cam.getVPMatrix() );
+  ngl::VAOPrimitives::instance()->draw("ground");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
