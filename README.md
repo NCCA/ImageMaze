@@ -1,4 +1,4 @@
-# BlankNGL
-![alt tag](http://nccastaff.bournemouth.ac.uk/jmacey/GraphicsLib/Demos/BlankNGL.png)
+# ImageMaze
+![alt tag](maps/small.png)
 
-This is an empty boilerplate framework for NGL projects, it creates an empty window and draws nothing
+Simple demo to load a png file and draw the pixels as blocks to form a simple maze.
