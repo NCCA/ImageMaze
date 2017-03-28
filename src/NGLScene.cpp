@@ -42,11 +42,13 @@ void NGLScene::initializeGL()
   glEnable(GL_DEPTH_TEST);
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
-  m_cam.set(ngl::Vec3(2,2,-10),ngl::Vec3::zero(),ngl::Vec3::up());
+  m_cam.set(ngl::Vec3(0,20,-20),ngl::Vec3::zero(),ngl::Vec3::up());
   ngl::VAOPrimitives::instance()->createTrianglePlane("ground",40,40,10,10,ngl::Vec3::up());
+  m_actor.setPos(2,2);
+  m_actor.setMap(m_map);
+  m_actor.setParent(this);
+
 }
-
-
 
 void NGLScene::paintGL()
 {
@@ -70,6 +72,7 @@ void NGLScene::paintGL()
   m_map->draw(m_mouseGlobalTX);
   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
+  m_actor.draw();
   shader->setUniform("Colour",0.3f,0.3f,0.3f,1.0f);
   ngl::Mat4 pos;
   pos.translate(0,-0.55f,0);
@@ -94,6 +97,10 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
 
   break;
   case Qt::Key_W : m_wireframe^=true; break;
+  case Qt::Key_Up : m_actor.move(Actor::DIRECTION::NORTH); break;
+  case Qt::Key_Down : m_actor.move(Actor::DIRECTION::SOUTH); break;
+  case Qt::Key_Left : m_actor.move(Actor::DIRECTION::WEST); break;
+  case Qt::Key_Right : m_actor.move(Actor::DIRECTION::EAST); break;
   default : break;
   }
   // finally update the GLWindow and re-draw

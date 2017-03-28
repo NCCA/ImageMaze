@@ -19,10 +19,12 @@ CONFIG-=app_bundle
 SOURCES+= $$PWD/src/main.cpp \
           $$PWD/src/NGLScene.cpp \
           $$PWD/src/Map.cpp \
+          $$PWD/src/Actor.cpp \
           $$PWD/src/NGLSceneMouseControls.cpp
 # same for the .h files
 HEADERS+= $$PWD/include/NGLScene.h \
           $$PWD/include/Map.h \
+          $$PWD/include/Actor.h \
           $$PWD/include/WindowParams.h
 # and add the include dir into the search path for Qt and make
 INCLUDEPATH +=./include

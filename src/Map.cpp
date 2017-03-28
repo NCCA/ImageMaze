@@ -24,15 +24,19 @@ void Map::draw(const ngl::Mat4 &_mouse)
   GLuint imageX=0;
   GLuint imageZ=0;
   ngl::Colour pixel;
+
+  auto toFloat=[=](float _r){ return _r/255.0f;};
+
   for(float z=-halfZ; z<halfZ; ++z)
   {
     for(float x=-halfX; x<halfX; ++x)
     {
       pixel=m_image->getColour(imageX,imageZ);
-      if(pixel.m_r==0)
+      if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
       {
-        tx.setPosition(x,0,z);
+        tx.setPosition(-x,0,z);
         shader->setUniform("MVP",tx.getMatrix()*_mouse*m_cam->getVPMatrix());
+        shader->setUniform("Colour",toFloat(pixel.m_r),toFloat(pixel.m_g),toFloat(pixel.m_b),1.0f);
         prim->draw("cube");
       }
       ++imageX;

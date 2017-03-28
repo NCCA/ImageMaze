@@ -5,6 +5,7 @@
 #include <memory>
 #include <QOpenGLWindow>
 #include "WindowParams.h"
+#include "Actor.h"
 //----------------------------------------------------------------------------------------------------------------------
 /// @file NGLScene.h
 /// @brief this class inherits from the Qt OpenGLWindow and allows us to use NGL to draw OpenGL
@@ -43,6 +44,8 @@ class NGLScene : public QOpenGLWindow
     /// @brief this is called everytime we resize the window
     //----------------------------------------------------------------------------------------------------------------------
     void resizeGL(int _w, int _h) override;
+    const ngl::Camera &getCamera()const {return  m_cam;}
+    const ngl::Mat4 &getMouseTX() const { return m_mouseGlobalTX;}
 
 private:
 
@@ -80,9 +83,10 @@ private:
     /// position for our model
     ngl::Vec3 m_modelPos;
     ngl::Camera m_cam;
-    std::unique_ptr<Map> m_map;
+    std::shared_ptr<Map> m_map;
     ngl::Mat4 m_mouseGlobalTX;
     bool m_wireframe=false;
+    Actor m_actor;
 
 };
 
