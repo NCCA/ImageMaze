@@ -75,10 +75,10 @@ void Actor::move(DIRECTION _d)
 
   switch (_d)
   {
-    case DIRECTION::NORTH : if(moveValid(_d)) m_posZ-=1; break;
-    case DIRECTION::SOUTH : if(moveValid(_d)) m_posZ+=1; break;
-    case DIRECTION::EAST  : if(moveValid(_d)) m_posX+=1; break;
-    case DIRECTION::WEST  : if(moveValid(_d)) m_posX-=1; break;
+    case DIRECTION::NORTH : if(moveValid(_d)) { m_posZ-=1; m_rot=ROTATION::NORTH; } break;
+    case DIRECTION::SOUTH : if(moveValid(_d)) { m_posZ+=1; m_rot=ROTATION::SOUTH; } break;
+    case DIRECTION::EAST  : if(moveValid(_d)) { m_posX+=1; m_rot=ROTATION::EAST; } break;
+    case DIRECTION::WEST  : if(moveValid(_d)) { m_posX-=1; m_rot=ROTATION::WEST; } break;
 
   }
 }
@@ -90,7 +90,8 @@ void Actor::draw() const
   float halfZ=m_map->getImage()->height()/2;
   float halfX=m_map->getImage()->width()/2;
   ngl::Transformation tx;
-  tx.setPosition(halfX-m_posX,0.0f,halfZ-m_posZ);
+  tx.setRotation(0,static_cast<float>(m_rot),0);
+  tx.setPosition(halfX-m_posX,0.5f,halfZ-m_posZ);
   MVP=tx.getMatrix()*
       m_parent->getMouseTX()
       *m_parent->getCamera().getVPMatrix();

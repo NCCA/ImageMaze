@@ -44,7 +44,7 @@ class NGLScene : public QOpenGLWindow
     /// @brief this is called everytime we resize the window
     //----------------------------------------------------------------------------------------------------------------------
     void resizeGL(int _w, int _h) override;
-    const ngl::Camera &getCamera()const {return  m_cam;}
+    const ngl::Camera &getCamera()const {return  *m_activeCam;}
     const ngl::Mat4 &getMouseTX() const { return m_mouseGlobalTX;}
 
 private:
@@ -83,8 +83,11 @@ private:
     /// position for our model
     ngl::Vec3 m_modelPos;
     ngl::Camera m_cam;
+    ngl::Camera m_actorCam;
+    ngl::Camera *m_activeCam;
     std::shared_ptr<Map> m_map;
     ngl::Mat4 m_mouseGlobalTX;
+    std::string m_fname;
     bool m_wireframe=false;
     Actor m_actor;
 

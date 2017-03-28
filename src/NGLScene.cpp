@@ -12,7 +12,7 @@ NGLScene::NGLScene(const std::string &_fname)
 {
   // re-size the widget to that of the parent (in this case the GLFrame passed in on construction)
   setTitle("Blank NGL");
-  m_map.reset(new Map(_fname,&m_cam));
+  m_fname=_fname;
 }
 
 
@@ -28,6 +28,7 @@ void NGLScene::resizeGL(int _w , int _h)
   m_win.width  = static_cast<int>( _w * devicePixelRatio() );
   m_win.height = static_cast<int>( _h * devicePixelRatio() );
   m_cam.setShape(45.0f,static_cast<float>(m_win.width)/m_win.height,0.5f,50.0f);
+  m_actorCam.setShape(45.0f,static_cast<float>(m_win.width)/m_win.height,0.5f,50.0f);
 }
 
 
@@ -43,6 +44,12 @@ void NGLScene::initializeGL()
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
   m_cam.set(ngl::Vec3(0,30,0),ngl::Vec3::zero(),ngl::Vec3::in());
+  m_actorCam.set(ngl::Vec3(2,0,2),ngl::Vec3(2,0,3),ngl::Vec3::up());
+
+
+  m_activeCam=&m_cam;
+  m_map.reset(new Map(m_fname,m_activeCam));
+
   ngl::VAOPrimitives::instance()->createTrianglePlane("ground",40,40,10,10,ngl::Vec3::up());
   m_actor.setPos(2,2);
   m_actor.setMap(m_map);
@@ -74,9 +81,10 @@ void NGLScene::paintGL()
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
   m_actor.draw();
   shader->setUniform("Colour",0.3f,0.3f,0.3f,1.0f);
+
   ngl::Mat4 pos;
   pos.translate(0,-0.55f,0);
-  shader->setUniform("MVP", m_mouseGlobalTX * pos* m_cam.getVPMatrix() );
+  shader->setUniform("MVP", m_mouseGlobalTX * pos* m_activeCam->getVPMatrix() );
   ngl::VAOPrimitives::instance()->draw("ground");
 }
 
@@ -101,9 +109,13 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
   case Qt::Key_Down : m_actor.move(Actor::DIRECTION::SOUTH); break;
   case Qt::Key_Left : m_actor.move(Actor::DIRECTION::WEST); break;
   case Qt::Key_Right : m_actor.move(Actor::DIRECTION::EAST); break;
+  case Qt::Key_1 : m_activeCam=&m_cam; break;
+  case Qt::Key_2 : m_activeCam=&m_actorCam; break;
   default : break;
   }
   // finally update the GLWindow and re-draw
-
+    m_actorCam.set(ngl::Vec3(m_actor.getPos().first,0,m_actor.getPos().second),
+                   ngl::Vec3(m_actor.getPos().first,0,m_actor.getPos().second+1),
+                   ngl::Vec3::up());
     update();
 }

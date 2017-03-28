@@ -9,6 +9,7 @@ class Actor
 {
   public :
     enum class DIRECTION : char {NORTH,SOUTH,EAST,WEST};
+    enum class ROTATION : int {NORTH=0,SOUTH=180,EAST=270,WEST=90};
     Actor()=default;
     Actor(GLuint _x, GLuint _z );
     void setPos(GLuint _x, GLuint _z );
@@ -23,6 +24,7 @@ class Actor
     GLuint m_posZ;
     std::shared_ptr<Map> m_map;
     const NGLScene *m_parent;
+    ROTATION m_rot=ROTATION::NORTH;
 
 };
 
