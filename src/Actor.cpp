@@ -3,6 +3,7 @@
 #include <ngl/ShaderLib.h>
 #include <ngl/Transformation.h>
 #include <ngl/VAOPrimitives.h>
+#include <ngl/NGLStream.h>
 Actor::Actor(GLuint _x , GLuint _z) : m_posX(_x),m_posZ(_z)
 {
 
@@ -35,7 +36,41 @@ void Actor::move(DIRECTION _d)
 {
   auto moveValid=[this](DIRECTION _dir)
   {
-    return true;
+    bool valid=true;
+    ngl::Colour pixel;
+    auto height=m_map->getImage()->height();
+    std::cout<<"Pos "<<m_posX<<' '<<m_posZ<<'\n';
+    switch (_dir)
+    {
+      case DIRECTION::NORTH :
+        pixel=m_map->getImage()->getColour(m_posX,height-m_posZ+1);
+        std::cout<<"North "<<pixel<<'\n';
+        if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+          valid=false;
+      break;
+
+      case DIRECTION::SOUTH :
+        pixel=m_map->getImage()->getColour(m_posX,height-m_posZ-1);
+        std::cout<<"South "<<pixel<<'\n';
+        if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+          valid=false;
+      break;
+    case DIRECTION::WEST :
+      pixel=m_map->getImage()->getColour(m_posX-1,height-m_posZ);;
+      std::cout<<"West "<<pixel<<'\n';
+      if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+        valid=false;
+    break;
+
+    case DIRECTION::EAST :
+      pixel=m_map->getImage()->getColour(m_posX+1,height-m_posZ);;
+      std::cout<<"East "<<pixel<<'\n';
+      if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+        valid=false;
+    break;
+
+    }
+    return valid;
   };
 
   switch (_d)

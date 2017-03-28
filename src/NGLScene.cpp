@@ -42,7 +42,7 @@ void NGLScene::initializeGL()
   glEnable(GL_DEPTH_TEST);
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
-  m_cam.set(ngl::Vec3(0,20,-20),ngl::Vec3::zero(),ngl::Vec3::up());
+  m_cam.set(ngl::Vec3(0,30,0),ngl::Vec3::zero(),ngl::Vec3::in());
   ngl::VAOPrimitives::instance()->createTrianglePlane("ground",40,40,10,10,ngl::Vec3::up());
   m_actor.setPos(2,2);
   m_actor.setMap(m_map);
