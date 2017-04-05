@@ -45,27 +45,27 @@ void Actor::move(DIRECTION _d)
       case DIRECTION::NORTH :
         pixel=m_map->getImage()->getColour(m_posX,height-m_posZ+1);
         std::cout<<"North "<<pixel<<'\n';
-        if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+        if(!FCompare(pixel.m_r,255) || !FCompare(pixel.m_g,255) || !FCompare(pixel.m_b,255))
           valid=false;
       break;
 
       case DIRECTION::SOUTH :
         pixel=m_map->getImage()->getColour(m_posX,height-m_posZ-1);
         std::cout<<"South "<<pixel<<'\n';
-        if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+        if(!FCompare(pixel.m_r,255) || !FCompare(pixel.m_g,255) || !FCompare(pixel.m_b,255))
           valid=false;
       break;
     case DIRECTION::WEST :
       pixel=m_map->getImage()->getColour(m_posX-1,height-m_posZ);;
       std::cout<<"West "<<pixel<<'\n';
-      if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+      if(!FCompare(pixel.m_r,255) || !FCompare(pixel.m_g,255) || !FCompare(pixel.m_b,255))
         valid=false;
     break;
 
     case DIRECTION::EAST :
       pixel=m_map->getImage()->getColour(m_posX+1,height-m_posZ);;
       std::cout<<"East "<<pixel<<'\n';
-      if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+      if(!FCompare(pixel.m_r,255) || !FCompare(pixel.m_g,255) || !FCompare(pixel.m_b,255))
         valid=false;
     break;
 

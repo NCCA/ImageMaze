@@ -32,7 +32,9 @@ void Map::draw(const ngl::Mat4 &_mouse)
     for(float x=-halfX; x<halfX; ++x)
     {
       pixel=m_image->getColour(imageX,imageZ);
-      if(!FCompare(pixel.m_r,255) && !FCompare(pixel.m_g,255) && !FCompare(pixel.m_b,255))
+      std::cout<<pixel<<"\n";
+
+      if(!FCompare(pixel.m_r,255) || !FCompare(pixel.m_g,255) || !FCompare(pixel.m_b,255))
       {
         tx.setPosition(-x,0,z);
         shader->setUniform("MVP",tx.getMatrix()*_mouse*m_cam->getVPMatrix());
