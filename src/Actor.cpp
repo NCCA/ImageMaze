@@ -45,7 +45,7 @@ void Actor::move(DIRECTION _d)
       case DIRECTION::NORTH :
         pixel=m_map->getImage()->getColour(m_posX,height-m_posZ+1);
         std::cout<<"North "<<pixel<<'\n';
-        if(!FCompare(pixel.m_r,255) || !FCompare(pixel.m_g,255) || !FCompare(pixel.m_b,255))
+        if(!FCompare(pixel.m_r,255) || !FCompare(pixel.m_g,255) ||  !FCompare(pixel.m_b,255))
           valid=false;
       break;
 
@@ -92,9 +92,9 @@ void Actor::draw() const
   ngl::Transformation tx;
   tx.setRotation(0,static_cast<float>(m_rot),0);
   tx.setPosition(halfX-m_posX,0.5f,halfZ-m_posZ);
-  MVP=tx.getMatrix()*
-      m_parent->getMouseTX()
-      *m_parent->getCamera().getVPMatrix();
+  MVP=m_parent->getCamera().getVPMatrix() *
+      m_parent->getMouseTX() *
+      tx.getMatrix();
   shader->setUniform("MVP",MVP);
   shader->setUniform("Colour",1.0f,0.0f,0.0f,1.0f);
   ngl::VAOPrimitives::instance()->draw("troll");

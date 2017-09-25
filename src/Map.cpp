@@ -37,7 +37,7 @@ void Map::draw(const ngl::Mat4 &_mouse)
       if(!FCompare(pixel.m_r,255) || !FCompare(pixel.m_g,255) || !FCompare(pixel.m_b,255))
       {
         tx.setPosition(-x,0,z);
-        shader->setUniform("MVP",tx.getMatrix()*_mouse*m_cam->getVPMatrix());
+        shader->setUniform("MVP",m_cam->getVPMatrix()*_mouse*tx.getMatrix());
         shader->setUniform("Colour",toFloat(pixel.m_r),toFloat(pixel.m_g),toFloat(pixel.m_b),1.0f);
         prim->draw("cube");
       }

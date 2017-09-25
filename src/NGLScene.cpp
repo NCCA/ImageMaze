@@ -84,7 +84,7 @@ void NGLScene::paintGL()
 
   ngl::Mat4 pos;
   pos.translate(0,-0.55f,0);
-  shader->setUniform("MVP", m_mouseGlobalTX * pos* m_activeCam->getVPMatrix() );
+  shader->setUniform("MVP",  m_activeCam->getVPMatrix() * pos*m_mouseGlobalTX );
   ngl::VAOPrimitives::instance()->draw("ground");
 }
 
