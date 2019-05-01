@@ -1,6 +1,7 @@
 #ifndef NGLSCENE_H_
 #define NGLSCENE_H_
 #include <ngl/Vec3.h>
+#include <ngl/Mat4.h>
 #include "Map.h"
 #include <memory>
 #include <QOpenGLWindow>
@@ -30,7 +31,7 @@ class NGLScene : public QOpenGLWindow
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief dtor must close down ngl and release OpenGL resources
     //----------------------------------------------------------------------------------------------------------------------
-    ~NGLScene();
+    ~NGLScene() override;
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief the initialize class is called once when the window is created and we have a valid GL context
     /// use this to setup any default GL stuff
@@ -44,7 +45,13 @@ class NGLScene : public QOpenGLWindow
     /// @brief this is called everytime we resize the window
     //----------------------------------------------------------------------------------------------------------------------
     void resizeGL(int _w, int _h) override;
-    const ngl::Camera &getCamera()const {return  *m_activeCam;}
+    struct CameraVP
+    {
+        ngl::Mat4 view;
+        ngl::Mat4 project;
+    };
+
+    const CameraVP &getCamera()const {return  *m_activeCam;}
     const ngl::Mat4 &getMouseTX() const { return m_mouseGlobalTX;}
 
 private:
@@ -82,9 +89,9 @@ private:
     WinParams m_win;
     /// position for our model
     ngl::Vec3 m_modelPos;
-    ngl::Camera m_cam;
-    ngl::Camera m_actorCam;
-    ngl::Camera *m_activeCam;
+    CameraVP m_cam;
+    CameraVP m_actorCam;
+    CameraVP *m_activeCam;
     std::shared_ptr<Map> m_map;
     ngl::Mat4 m_mouseGlobalTX;
     std::string m_fname;

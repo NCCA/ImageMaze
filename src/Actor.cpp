@@ -37,7 +37,7 @@ void Actor::move(DIRECTION _d)
   auto moveValid=[this](DIRECTION _dir)
   {
     bool valid=true;
-    ngl::Colour pixel;
+    ngl::Vec3 pixel;
     auto height=m_map->getImage()->height();
     std::cout<<"Pos "<<m_posX<<' '<<m_posZ<<'\n';
     switch (_dir)
@@ -92,7 +92,7 @@ void Actor::draw() const
   ngl::Transformation tx;
   tx.setRotation(0,static_cast<float>(m_rot),0);
   tx.setPosition(halfX-m_posX,0.5f,halfZ-m_posZ);
-  MVP=m_parent->getCamera().getVPMatrix() *
+  MVP=m_parent->getCamera().project * m_parent->getCamera().view *
       m_parent->getMouseTX() *
       tx.getMatrix();
   shader->setUniform("MVP",MVP);

@@ -27,8 +27,8 @@ void NGLScene::resizeGL(int _w , int _h)
 {
   m_win.width  = static_cast<int>( _w * devicePixelRatio() );
   m_win.height = static_cast<int>( _h * devicePixelRatio() );
-  m_cam.setShape(45.0f,static_cast<float>(m_win.width)/m_win.height,0.5f,50.0f);
-  m_actorCam.setShape(45.0f,static_cast<float>(m_win.width)/m_win.height,0.5f,50.0f);
+  m_cam.project=ngl::perspective(45.0f,static_cast<float>(m_win.width)/m_win.height,0.5f,50.0f);
+  m_actorCam.project=ngl::perspective(45.0f,static_cast<float>(m_win.width)/m_win.height,0.5f,50.0f);
 }
 
 
@@ -43,12 +43,12 @@ void NGLScene::initializeGL()
   glEnable(GL_DEPTH_TEST);
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
-  m_cam.set(ngl::Vec3(0,30,0),ngl::Vec3::zero(),ngl::Vec3::in());
-  m_actorCam.set(ngl::Vec3(2,0,2),ngl::Vec3(2,0,3),ngl::Vec3::up());
+  m_cam.view=ngl::lookAt(ngl::Vec3(0,30,0),ngl::Vec3::zero(),ngl::Vec3::in());
+  m_actorCam.view=ngl::lookAt(ngl::Vec3(2,0,2),ngl::Vec3(2,0,3),ngl::Vec3::up());
 
 
   m_activeCam=&m_cam;
-  m_map.reset(new Map(m_fname,m_activeCam));
+  m_map.reset(new Map(m_fname,&m_activeCam->view,&m_activeCam->project));
 
   ngl::VAOPrimitives::instance()->createTrianglePlane("ground",40,40,10,10,ngl::Vec3::up());
   m_actor.setPos(2,2);
@@ -84,7 +84,7 @@ void NGLScene::paintGL()
 
   ngl::Mat4 pos;
   pos.translate(0,-0.55f,0);
-  shader->setUniform("MVP",  m_activeCam->getVPMatrix() * pos*m_mouseGlobalTX );
+  shader->setUniform("MVP",  m_activeCam->project * m_activeCam->view * pos*m_mouseGlobalTX );
   ngl::VAOPrimitives::instance()->draw("ground");
 }
 
@@ -114,7 +114,7 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
   default : break;
   }
   // finally update the GLWindow and re-draw
-    m_actorCam.set(ngl::Vec3(m_actor.getPos().first,0,m_actor.getPos().second),
+    m_actorCam.view=ngl::lookAt(ngl::Vec3(m_actor.getPos().first,0,m_actor.getPos().second),
                    ngl::Vec3(m_actor.getPos().first,0,m_actor.getPos().second+1),
                    ngl::Vec3::up());
     update();
